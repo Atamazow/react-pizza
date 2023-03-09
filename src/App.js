@@ -14,13 +14,13 @@ const [searchValue, setSearchValue] = useState('')
       <div className="wrapper">
        <Header searchValue={searchValue} setSearchValue={setSearchValue}/>
         <div className="content">
+
           <div className="container">
               <Routes>
                 <Route path='/' element={<Home searchValue={searchValue}/>}/>
                 <Route path='/cart' element={<Cart/>}/>
                 <Route path='*' element={<NotFound/>}/>
               </Routes>
-
           </div>
         </div>
       </div>
