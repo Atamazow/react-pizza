@@ -4,19 +4,23 @@ import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination/Pagination";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategoryId } from "../redux/slices/filterSlice";
+import { setCategoryId, setCurrentPage } from "../redux/slices/filterSlice";
 import axios from "axios";
 
 function Home({ searchValue }) {
   const categoryId = useSelector((state) => state.filterSlice.categoryId);
   const sortType = useSelector((state) => state.filterSlice.sort.sortProperty);
+  const currentPage = useSelector((state) => state.filterSlice.currentPage);
   const [items, setItems] = useState();
-  const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
   };
+
+  const onChangePage = (number) => {
+    dispatch(setCurrentPage(number))
+  }
   useEffect(() => {
     const order = sortType.includes("-") ? "asc" : "desc";
     const sortBy = sortType.replace("-", "");
@@ -38,7 +42,7 @@ function Home({ searchValue }) {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{pizzas}</div>
-      <Pagination setCurrentPage={setCurrentPage} />
+      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 }

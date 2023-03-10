@@ -1,12 +1,25 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import style from "./Search.module.scss";
+import debounce from "lodash.debounce";
 
 function Search({ searchValue, setSearchValue }) {
+  const [value, setValue] = useState("");
   const inputRef = useRef();
   const onClickClear = () => {
-      setSearchValue('');
-      inputRef.current.focus();
-  }
+    setSearchValue("");
+    setValue("");
+    inputRef.current.focus();
+  };
+
+  const updateChangeInput = useCallback(() => {
+    debounce((str) => {
+      setSearchValue(str);
+    }, 100);
+  },[]);
+  const onChangeInput = (event) => {
+    setValue(event.target.value);
+    updateChangeInput(event.target.value);
+  };
 
   return (
     <div className={style.root}>
@@ -22,13 +35,13 @@ function Search({ searchValue, setSearchValue }) {
       </svg>
       <input
         ref={inputRef}
-        value={searchValue}
-        onChange={(event) => setSearchValue(event.target.value)}
+        value={value}
+        onChange={onChangeInput}
         className={style.input}
         placeholder="Поиск пицц ..."
         type="text"
       />
-      {searchValue && (
+      {value && (
         <svg
           onClick={onClickClear}
           className={style.closeIcon}
@@ -40,7 +53,7 @@ function Search({ searchValue, setSearchValue }) {
           <path d="M38 12.83l-2.83-2.83-11.17 11.17-11.17-11.17-2.83 2.83 11.17 11.17-11.17 11.17 2.83 2.83 11.17-11.17 11.17 11.17 2.83-2.83-11.17-11.17z" />
           <path d="M0 0h48v48h-48z" fill="none" />
         </svg>
-      )}{" "}
+      )}
     </div>
   );
 }
