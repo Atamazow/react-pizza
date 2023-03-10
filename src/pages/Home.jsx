@@ -5,6 +5,7 @@ import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategoryId } from "../redux/slices/filterSlice";
+import axios from "axios";
 
 function Home({ searchValue }) {
   const categoryId = useSelector((state) => state.filterSlice.categoryId);
@@ -22,13 +23,11 @@ function Home({ searchValue }) {
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
-    fetch(
-      `https://6368ce8715219b84960742ec.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setItems(data);
-      });
+    axios
+      .get(
+        `https://6368ce8715219b84960742ec.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
+      )
+      .then((res) => setItems(res.data));
   }, [categoryId, sortType, searchValue, currentPage]);
   const pizzas = items?.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   return (
