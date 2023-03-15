@@ -6,21 +6,15 @@ import Sort, { list } from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination/Pagination";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setCategoryId,
-  setCurrentPage,
-  setFilters,
-} from "../redux/slices/filterSlice";
-
-import axios from "axios";
+import { setCategoryId, setCurrentPage } from "../redux/slices/filterSlice";
+import { fetchPizzas } from "../redux/slices/pizzasSlice";
 
 function Home({ searchValue }) {
   const navigate = useNavigate();
   const categoryId = useSelector((state) => state.filterSlice.categoryId);
   const sortType = useSelector((state) => state.filterSlice.sort.sortProperty);
   const currentPage = useSelector((state) => state.filterSlice.currentPage);
-  const [items, setItems] = useState();
-
+  const items = useSelector((state) => state.pizzasSlice.items);
   const dispatch = useDispatch();
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -44,27 +38,33 @@ function Home({ searchValue }) {
   //   }
   // }, []);
 
-  useEffect(() => {
+  const getPizzas = () => {
     const order = sortType.includes("-") ? "asc" : "desc";
     const sortBy = sortType.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
-    axios
-      .get(
-        `https://6368ce8715219b84960742ec.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-      )
-      .then((res) => setItems(res.data));
-  }, [categoryId, sortType, searchValue, currentPage]);
+    dispatch(
+      fetchPizzas({
+        order,
+        sortBy,
+        category,
+        search,
+        currentPage,
+      })
+    );
+  };
 
   useEffect(() => {
+    getPizzas();
+
     const queryString = qs.stringify({
       sortType,
       categoryId,
       currentPage,
     });
     navigate(`?${queryString}queryString`);
-  }, [categoryId, sortType, currentPage]);
+  }, [categoryId, sortType, currentPage, searchValue]);
 
   const pizzas = items?.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   return (
