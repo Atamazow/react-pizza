@@ -7,17 +7,16 @@ import Cart from "./pages/Cart";
 import {useState} from "react";
 
 function App() {
-const [searchValue, setSearchValue] = useState('')
 
   return (
     <div className="App">
       <div className="wrapper">
-       <Header searchValue={searchValue} setSearchValue={setSearchValue}/>
+       <Header/>
         <div className="content">
 
           <div className="container">
               <Routes>
-                <Route path='/' element={<Home searchValue={searchValue}/>}/>
+                <Route path='/' element={<Home/>}/>
                 <Route path='/cart' element={<Cart/>}/>
                 <Route path='*' element={<NotFound/>}/>
               </Routes>

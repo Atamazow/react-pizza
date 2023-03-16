@@ -6,16 +6,20 @@ import Sort, { list } from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination/Pagination";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategoryId, setCurrentPage } from "../redux/slices/filterSlice";
-import { fetchPizzas } from "../redux/slices/pizzasSlice";
+import {
 
-function Home({ searchValue }) {
-  const navigate = useNavigate();
-  const categoryId = useSelector((state) => state.filterSlice.categoryId);
-  const sortType = useSelector((state) => state.filterSlice.sort.sortProperty);
-  const currentPage = useSelector((state) => state.filterSlice.currentPage);
-  const { items, status } = useSelector((state) => state.pizzasSlice);
+  selectFilter,
+  setCategoryId,
+  setCurrentPage,
+} from "../redux/slices/filterSlice";
+import { fetchPizzas, selectPizzaData } from "../redux/slices/pizzasSlice";
+
+function Home() {
+  const { categoryId, sortType, currentPage, searchValue } = useSelector(selectFilter);
+  const { items, status } = useSelector(selectPizzaData);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
   };
@@ -75,7 +79,7 @@ function Home({ searchValue }) {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === "error" ? (
-        <div className='content__error-info'>
+        <div className="content__error-info">
           <h2>Произошла ошибка 😢</h2>
           <p>К сожалению, не удалось найти питсы. Повторите попытку позже.</p>
         </div>
