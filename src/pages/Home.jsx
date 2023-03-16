@@ -14,7 +14,7 @@ function Home({ searchValue }) {
   const categoryId = useSelector((state) => state.filterSlice.categoryId);
   const sortType = useSelector((state) => state.filterSlice.sort.sortProperty);
   const currentPage = useSelector((state) => state.filterSlice.currentPage);
-  const items = useSelector((state) => state.pizzasSlice.items);
+  const { items, status } = useSelector((state) => state.pizzasSlice);
   const dispatch = useDispatch();
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -74,7 +74,14 @@ function Home({ searchValue }) {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{pizzas}</div>
+      {status === "error" ? (
+        <div className='content__error-info'>
+          <h2>Произошла ошибка 😢</h2>
+          <p>К сожалению, не удалось найти питсы. Повторите попытку позже.</p>
+        </div>
+      ) : (
+        <div className="content__items">{pizzas}</div>
+      )}
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );

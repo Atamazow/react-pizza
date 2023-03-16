@@ -33,7 +33,7 @@ const pizzasSlice = createSlice({
         state.items = action.payload
         state.status = 'success'
     },[fetchPizzas.rejected](state, action) {
-        state.status = 'rejected'
+        state.status = 'error'
         state.items = []
     },
   },
