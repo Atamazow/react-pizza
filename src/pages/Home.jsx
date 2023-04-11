@@ -7,7 +7,6 @@ import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import {
-
   selectFilter,
   setCategoryId,
   setCurrentPage,
@@ -43,8 +42,8 @@ function Home() {
   // }, []);
 
   const getPizzas = () => {
-    const order = sortType.includes("-") ? "asc" : "desc";
-    const sortBy = sortType.replace("-", "");
+    const order = sortType?.includes("-") ? "asc" : "desc";
+    const sortBy = sortType?.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
